@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { getSet } from '../db/sets'
+import { seedDefaultSets } from '../db/seed'
 import { deleteItem, getItemsForSet, reorderItems } from '../db/items'
 import { getAudioBlob } from '../db/audio'
 import type { DhikrItem, DhikrSet } from '../types/dhikr'
@@ -38,6 +39,9 @@ export function AdminItemsPage() {
   async function refresh() {
     if (!setId) return
     setLoading(true)
+    // Same first-launch race as Home.tsx — a deep link into a specific
+    // set's admin page can land before any page has seeded the defaults.
+    await seedDefaultSets()
     const [s, itemList] = await Promise.all([getSet(setId), getItemsForSet(setId)])
     setSet(s ?? null)
     setItems(itemList)

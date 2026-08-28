@@ -64,3 +64,18 @@ test installability and offline behavior, use a production build:
 npm run build
 npm run preview
 ```
+
+## Deployment
+
+Deployed to GitHub Pages via `.github/workflows/deploy.yml`, which builds and
+publishes on every push to `main`. Live at:
+**https://zubairmk.github.io/athmeeyamithram/**
+
+Two things this deployment target shapes, both in `vite.config.ts` /
+`src/main.tsx`:
+- `base: '/athmeeyamithram/'` — it's a project Pages site (served under a
+  subpath), not a user/org root site.
+- `HashRouter` instead of `BrowserRouter` — GitHub Pages can't be given a
+  server-side rewrite rule, so a direct/bookmarked visit to a route like
+  `/admin` needs the route to live in the URL fragment (`#/admin`) rather
+  than the path, or it 404s.

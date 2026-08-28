@@ -1,9 +1,8 @@
-import { Suspense, lazy, useEffect } from 'react'
+import { Suspense, lazy } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import { Home } from './pages/Home'
 import { DhikrPlayer } from './pages/DhikrPlayer'
 import { Settings } from './pages/Settings'
-import { seedDefaultSets } from './db/seed'
 import { useReminderScheduler } from './hooks/useReminderScheduler'
 
 // Code-split: regular users never load the admin bundle (pdf.js, tesseract.js)
@@ -16,9 +15,6 @@ const AdminItemsPage = lazy(() =>
 )
 
 function App() {
-  useEffect(() => {
-    seedDefaultSets().catch((error) => console.error('Failed to seed default sets', error))
-  }, [])
   useReminderScheduler()
 
   return (

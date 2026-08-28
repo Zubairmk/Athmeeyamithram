@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { getAllSets } from '../db/sets'
 import { getAllProgress, getProgress } from '../db/progress'
 import { getItemsForSet } from '../db/items'
+import { seedDefaultSets } from '../db/seed'
 import { todayDateString } from '../lib/date'
 import { computeCurrentStreak } from '../lib/streak'
 import type { DhikrSet } from '../types/dhikr'
@@ -37,6 +38,12 @@ export function Home() {
   useEffect(() => {
     let cancelled = false
     async function load() {
+      // Awaited here (not just left to App.tsx's own seeding effect) so a
+      // brand-new install can't race: without this, Home could read sets
+      // before the parallel seed effect in App.tsx finishes writing them,
+      // showing an empty home screen that never self-corrects.
+      await seedDefaultSets()
+      if (cancelled) return
       const [allSets, todayProgress, allProgress] = await Promise.all([
         getAllSets(),
         getProgress(todayDateString()),

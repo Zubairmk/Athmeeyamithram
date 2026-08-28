@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { deleteSet, getAllSets, putSet, reorderSets } from '../db/sets'
 import { getItemsForSet } from '../db/items'
+import { seedDefaultSets } from '../db/seed'
 import { slugify } from '../lib/slug'
 import type { DhikrSet, SetCategory } from '../types/dhikr'
 import { AdminLayout } from './AdminLayout'
@@ -42,6 +43,9 @@ export function AdminSetsPage() {
 
   async function refresh() {
     setLoading(true)
+    // Same first-launch race as Home.tsx: don't trust App.tsx's parallel
+    // seed effect to have finished by the time this reads sets.
+    await seedDefaultSets()
     const allSets = await getAllSets()
     setSets(allSets)
     const counts: Record<string, number> = {}

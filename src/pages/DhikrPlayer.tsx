@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom'
 import { getSet } from '../db/sets'
 import { getItemsForSet } from '../db/items'
 import { getProgress, putProgress } from '../db/progress'
+import { seedDefaultSets } from '../db/seed'
 import { todayDateString } from '../lib/date'
 import type { DailyProgress, DhikrItem, DhikrSet } from '../types/dhikr'
 import { IlluminatedCard } from '../components/IlluminatedCard'
@@ -43,6 +44,11 @@ export function DhikrPlayer() {
     if (!setId) return
     let cancelled = false
     async function load() {
+      // Same first-launch race as Home.tsx — matters here too since a
+      // deep link/PWA shortcut can land directly on a set before Home ever
+      // ran its own seed.
+      await seedDefaultSets()
+      if (cancelled) return
       const [s, itemList] = await Promise.all([getSet(setId!), getItemsForSet(setId!)])
       if (cancelled) return
       setSet(s ?? null)
