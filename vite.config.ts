@@ -5,9 +5,12 @@ import { VitePWA } from 'vite-plugin-pwa'
 
 // https://vite.dev/config/
 export default defineConfig({
-  // Served from https://<owner>.github.io/athmeeyamithram/ (a project Pages
+  // Served from https://zubairmk.github.io/Athmeeyamithram/ (a project Pages
   // site, not a user/org root site), so all asset URLs need this prefix.
-  base: '/athmeeyamithram/',
+  // Case matters: GitHub's own deploy log reports this exact casing (the
+  // repo's real name), and sub-resource paths are case-sensitive even where
+  // the top-level Pages routing itself is lenient about it.
+  base: '/Athmeeyamithram/',
   plugins: [
     react(),
     tailwindcss(),
