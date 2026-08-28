@@ -12,6 +12,9 @@ dist
 dist-ssr
 *.local
 
+# Vendored via `npm run postinstall` (scripts/vendor-tesseract-core.mjs)
+public/tesseract-core/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

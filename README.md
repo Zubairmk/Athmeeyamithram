@@ -15,7 +15,13 @@ npm run dev
 - [x] **Stage 1** — Data layer: TypeScript schema, IndexedDB (via `idb`), seeded
       with the six default sets (Morning, Evening, After Prayer, Before Sleep,
       Distress, Travel), no dhikr content yet.
-- [ ] **Stage 2** — Admin CRUD screen (`/admin`) with PDF-upload-and-extract flow.
+- [x] **Stage 2** — Admin CRUD screen (`/admin`, code-split from the main
+      bundle) with set/item CRUD + reorder, and a PDF-upload-and-extract flow:
+      pdf.js text-layer extraction with an OCR (tesseract.js, Arabic +
+      Malayalam) fallback for scanned PDFs, vendored locally so the OCR
+      engine itself needs no CDN (see `scripts/vendor-tesseract-core.mjs`).
+      Extracted text is pre-filled into editable fields; low-confidence or
+      heuristically-corrected extractions are flagged for review.
 - [ ] **Stage 3** — Core screens (home, dhikr player).
 - [ ] **Stage 4** — Audio player (play/pause, speed control).
 - [ ] **Stage 5** — Streak tracking, PWA/offline, reminder notifications.

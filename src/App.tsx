@@ -1,41 +1,30 @@
-import { useEffect, useState } from 'react'
-import { getAllSets } from './db/sets'
+import { Suspense, lazy, useEffect } from 'react'
+import { Route, Routes } from 'react-router-dom'
+import { DebugHome } from './pages/DebugHome'
 import { seedDefaultSets } from './db/seed'
-import type { DhikrSet } from './types/dhikr'
+
+// Code-split: regular users never load the admin bundle (pdf.js, tesseract.js)
+// over the network — it's only fetched when someone actually visits /admin.
+const AdminSetsPage = lazy(() =>
+  import('./admin/AdminSetsPage').then((m) => ({ default: m.AdminSetsPage })),
+)
+const AdminItemsPage = lazy(() =>
+  import('./admin/AdminItemsPage').then((m) => ({ default: m.AdminItemsPage })),
+)
 
 function App() {
-  const [sets, setSets] = useState<DhikrSet[] | null>(null)
-
   useEffect(() => {
-    seedDefaultSets()
-      .then(getAllSets)
-      .then(setSets)
-      .catch((error) => console.error('Failed to load data layer', error))
+    seedDefaultSets().catch((error) => console.error('Failed to seed default sets', error))
   }, [])
 
   return (
-    <div className="min-h-screen bg-white p-8 font-sans text-neutral-900">
-      <h1 className="text-2xl font-semibold">Data layer check</h1>
-      <p className="mt-1 text-sm text-neutral-500">
-        Stage 1 debug view — confirms IndexedDB init, seeding, and reads. Replaced in Stage 3.
-      </p>
-      {sets === null ? (
-        <p className="mt-4">Loading…</p>
-      ) : (
-        <ul className="mt-4 space-y-2">
-          {sets.map((set) => (
-            <li key={set.id} className="rounded border border-neutral-200 p-3">
-              <div className="font-medium">
-                {set.title_en} <span className="text-neutral-400">·</span> {set.title_ml}
-              </div>
-              <div className="text-xs text-neutral-500">
-                id: {set.id} · slug: {set.slug} · category: {set.category} · order: {set.order}
-              </div>
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
+    <Suspense fallback={<div className="p-8 text-sm text-neutral-500">Loading…</div>}>
+      <Routes>
+        <Route path="/" element={<DebugHome />} />
+        <Route path="/admin" element={<AdminSetsPage />} />
+        <Route path="/admin/sets/:setId" element={<AdminItemsPage />} />
+      </Routes>
+    </Suspense>
   )
 }
 
