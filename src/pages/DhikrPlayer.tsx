@@ -7,6 +7,7 @@ import { todayDateString } from '../lib/date'
 import type { DailyProgress, DhikrItem, DhikrSet } from '../types/dhikr'
 import { IlluminatedCard } from '../components/IlluminatedCard'
 import { GeometricDivider } from '../components/GeometricDivider'
+import { AudioDock } from '../components/AudioDock'
 
 const SWIPE_THRESHOLD_PX = 50
 
@@ -135,7 +136,11 @@ export function DhikrPlayer() {
         </div>
       </header>
 
-      <main className="mx-auto flex w-full max-w-md flex-1 flex-col px-5 py-6">
+      <main
+        className={`mx-auto flex w-full max-w-md flex-1 flex-col px-5 py-6 ${
+          items.length > 0 ? 'pb-24' : ''
+        }`}
+      >
         {items.length === 0 ? (
           <p className="text-sm text-ink-soft">
             No dhikr items in this set yet. Add some from the admin panel.
@@ -212,6 +217,8 @@ export function DhikrPlayer() {
           </>
         )}
       </main>
+
+      {item && <AudioDock audioFile={item.audio.file} />}
     </div>
   )
 }

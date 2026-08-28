@@ -29,7 +29,11 @@ npm run dev
       every item's been viewed). Islamic-geometric design system (deep teal +
       ivory + muted gold, 8-point star motif, illuminated-manuscript card
       framing, Noto Naskh Arabic / Noto Sans Malayalam / Noto Serif).
-- [ ] **Stage 4** — Audio player (play/pause, speed control).
+- [x] **Stage 4** — Docked audio player on the dhikr player screen: play/
+      pause, seek bar, and 0.75x/1x/1.25x/1.5x speed control, styled with the
+      teal/gold palette. Mounted once per screen so the chosen speed carries
+      across items, and playback continues onto the next item automatically
+      if it was already playing when you navigate.
 - [ ] **Stage 5** — Streak tracking, PWA/offline, reminder notifications.
 
 ## Data model

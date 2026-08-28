@@ -33,3 +33,40 @@ body {
   color: var(--color-ink);
   font-family: var(--font-ui);
 }
+
+/* Docked audio player seek bar — teal track, gold thumb, matching the
+   rest of the player's palette instead of the browser's native control. */
+.audio-seek {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  border-radius: 9999px;
+  background: color-mix(in srgb, var(--color-paper) 25%, transparent);
+  outline: none;
+}
+.audio-seek::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 9999px;
+  background: var(--color-gold-400);
+  cursor: pointer;
+  margin-top: 0;
+}
+.audio-seek::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border: none;
+  border-radius: 9999px;
+  background: var(--color-gold-400);
+  cursor: pointer;
+}
+.audio-seek::-moz-range-track {
+  height: 4px;
+  border-radius: 9999px;
+  background: color-mix(in srgb, var(--color-paper) 25%, transparent);
+}
+.audio-seek:disabled {
+  opacity: 0.4;
+}
