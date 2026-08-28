@@ -38,17 +38,6 @@ export default defineConfig({
         ],
       },
       workbox: {
-        // The admin panel (pdf.js, tesseract.js, its vendored OCR core) is
-        // only ever loaded by whoever visits /admin — precaching it into
-        // every regular user's service worker install would defeat the
-        // point of code-splitting it out in the first place. It's cached
-        // opportunistically instead, via the runtimeCaching rule below,
-        // the first time someone actually opens /admin.
-        globIgnores: [
-          '**/assets/Admin*-*.js',
-          '**/assets/pdf.worker.min-*.mjs',
-          '**/tesseract-core/**',
-        ],
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
@@ -62,22 +51,6 @@ export default defineConfig({
               cacheName: 'google-fonts-webfonts',
               expiration: { maxEntries: 20, maxAgeSeconds: 60 * 60 * 24 * 365 },
               cacheableResponse: { statuses: [0, 200] },
-            },
-          },
-          {
-            urlPattern: /\/assets\/(Admin[^/]+|pdf\.worker\.min[^/]*)\.(js|mjs)$/,
-            handler: 'CacheFirst',
-            options: {
-              cacheName: 'admin-bundle',
-              expiration: { maxEntries: 10, maxAgeSeconds: 60 * 60 * 24 * 365 },
-            },
-          },
-          {
-            urlPattern: /\/tesseract-core\/.*/,
-            handler: 'CacheFirst',
-            options: {
-              cacheName: 'ocr-engine',
-              expiration: { maxEntries: 10, maxAgeSeconds: 60 * 60 * 24 * 365 },
             },
           },
         ],

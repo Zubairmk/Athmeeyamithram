@@ -12,16 +12,6 @@ export interface DhikrSet {
   updated_at: string
 }
 
-export type ExtractionMethod = 'text-layer' | 'ocr'
-export type ExtractionConfidence = 'high' | 'low'
-
-export interface DhikrItemSource {
-  pdf_file: string
-  extraction_method: ExtractionMethod
-  confidence: ExtractionConfidence
-  needs_review: boolean
-}
-
 export interface DhikrItemAudio {
   file: string
   duration_sec?: number
@@ -31,10 +21,9 @@ export interface DhikrItem {
   id: string
   set_id: string
   order: number
-  arabic_text: string
-  malayalam_text?: string
+  pdf_file: string // key into the pdf_blobs store — the source PDF, shown as-is
+  pdf_file_name: string // original filename, for admin reference
   audio: DhikrItemAudio
-  source: DhikrItemSource
   created_at: string
   updated_at: string
 }

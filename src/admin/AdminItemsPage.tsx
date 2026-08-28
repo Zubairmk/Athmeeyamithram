@@ -3,29 +3,31 @@ import { useParams } from 'react-router-dom'
 import { getSet } from '../db/sets'
 import { seedDefaultSets } from '../db/seed'
 import { deleteItem, getItemsForSet, reorderItems } from '../db/items'
-import { getAudioBlob } from '../db/audio'
+import { useAudioBlobUrl } from '../hooks/useAudioBlobUrl'
+import { usePdfBlobUrl } from '../hooks/usePdfBlobUrl'
 import type { DhikrItem, DhikrSet } from '../types/dhikr'
 import { AdminLayout } from './AdminLayout'
 import { AddItemForm } from './AddItemForm'
 
 function ItemAudioPreview({ file }: { file: string }) {
-  const [url, setUrl] = useState<string | null>(null)
-
-  useEffect(() => {
-    let objectUrl: string | null = null
-    getAudioBlob(file).then((blob) => {
-      if (blob) {
-        objectUrl = URL.createObjectURL(blob)
-        setUrl(objectUrl)
-      }
-    })
-    return () => {
-      if (objectUrl) URL.revokeObjectURL(objectUrl)
-    }
-  }, [file])
-
+  const url = useAudioBlobUrl(file)
   if (!url) return <span className="text-xs text-neutral-400">audio missing</span>
   return <audio controls src={url} className="h-8 w-56" />
+}
+
+function ItemPdfPreview({ file, name }: { file: string; name: string }) {
+  const url = usePdfBlobUrl(file)
+  if (!url) return <span className="text-xs text-neutral-400">PDF missing</span>
+  return (
+    <a
+      href={url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-sm text-neutral-700 underline hover:text-neutral-900"
+    >
+      {name || 'View PDF'}
+    </a>
+  )
 }
 
 export function AdminItemsPage() {
@@ -54,7 +56,7 @@ export function AdminItemsPage() {
   }, [setId])
 
   async function handleDelete(item: DhikrItem) {
-    if (!window.confirm('Delete this dhikr item and its audio?')) return
+    if (!window.confirm('Delete this dhikr item and its PDF/audio?')) return
     await deleteItem(item.id)
     await refresh()
   }
@@ -84,23 +86,9 @@ export function AdminItemsPage() {
             <li key={item.id} className="rounded border border-neutral-200 bg-white p-3">
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0 flex-1">
-                  <p dir="rtl" lang="ar" className="text-lg leading-relaxed">
-                    {item.arabic_text}
-                  </p>
-                  {item.malayalam_text && (
-                    <p dir="auto" lang="ml" className="mt-1 text-sm text-neutral-600">
-                      {item.malayalam_text}
-                    </p>
-                  )}
-                  <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-neutral-500">
+                  <div className="flex items-center gap-2 text-xs text-neutral-500">
                     <span>#{item.order}</span>
-                    <span>{item.source.extraction_method}</span>
-                    <span>confidence: {item.source.confidence}</span>
-                    {item.source.needs_review && (
-                      <span className="rounded-full bg-red-50 px-2 py-0.5 font-medium text-red-700">
-                        ⚠ needs review
-                      </span>
-                    )}
+                    <ItemPdfPreview file={item.pdf_file} name={item.pdf_file_name} />
                   </div>
                   <div className="mt-2">
                     <ItemAudioPreview file={item.audio.file} />

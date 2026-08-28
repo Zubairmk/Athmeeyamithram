@@ -19,13 +19,15 @@ export async function putSet(set: DhikrSet): Promise<void> {
 
 export async function deleteSet(id: string): Promise<void> {
   const db = await getDB()
-  const tx = db.transaction(['sets', 'items', 'audio_blobs'], 'readwrite')
+  const tx = db.transaction(['sets', 'items', 'audio_blobs', 'pdf_blobs'], 'readwrite')
   await tx.objectStore('sets').delete(id)
   const itemIndex = tx.objectStore('items').index('by-set')
   const audioStore = tx.objectStore('audio_blobs')
+  const pdfStore = tx.objectStore('pdf_blobs')
   let cursor = await itemIndex.openCursor(IDBKeyRange.only(id))
   while (cursor) {
     await audioStore.delete(cursor.value.audio.file)
+    await pdfStore.delete(cursor.value.pdf_file)
     await cursor.delete()
     cursor = await cursor.continue()
   }

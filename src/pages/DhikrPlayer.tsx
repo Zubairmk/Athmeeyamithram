@@ -7,8 +7,8 @@ import { seedDefaultSets } from '../db/seed'
 import { todayDateString } from '../lib/date'
 import type { DailyProgress, DhikrItem, DhikrSet } from '../types/dhikr'
 import { IlluminatedCard } from '../components/IlluminatedCard'
-import { GeometricDivider } from '../components/GeometricDivider'
 import { AudioDock } from '../components/AudioDock'
+import { usePdfBlobUrl } from '../hooks/usePdfBlobUrl'
 
 const SWIPE_THRESHOLD_PX = 50
 
@@ -96,6 +96,7 @@ export function DhikrPlayer() {
   }, [index, items.length])
 
   const item = items[index]
+  const pdfUrl = usePdfBlobUrl(item?.pdf_file)
   const progressLabel = useMemo(
     () => (items.length > 0 ? `${index + 1} / ${items.length}` : ''),
     [index, items.length],
@@ -154,23 +155,28 @@ export function DhikrPlayer() {
         ) : (
           <>
             <div
-              className="flex flex-1 items-center justify-center"
+              className="flex flex-1 flex-col"
               onTouchStart={handleTouchStart}
               onTouchEnd={handleTouchEnd}
             >
-              <IlluminatedCard corners className="w-full p-6 sm:p-8">
-                <p dir="rtl" lang="ar" className="font-arabic text-3xl leading-loose text-ink">
-                  {item.arabic_text}
-                </p>
-                {item.malayalam_text && (
-                  <>
-                    <div className="my-4">
-                      <GeometricDivider className="text-gold-500/30" />
-                    </div>
-                    <p dir="auto" lang="ml" className="font-malayalam text-base text-ink-soft">
-                      {item.malayalam_text}
+              <IlluminatedCard corners className="flex flex-1 flex-col p-2 sm:p-3">
+                {pdfUrl ? (
+                  <object
+                    data={pdfUrl}
+                    type="application/pdf"
+                    className="w-full flex-1 rounded"
+                    aria-label="Dhikr PDF"
+                  >
+                    <p className="p-4 text-center text-sm text-ink-soft">
+                      Your browser can't preview PDFs inline.{' '}
+                      <a href={pdfUrl} className="text-teal-700 underline" target="_blank" rel="noopener noreferrer">
+                        Open it directly
+                      </a>
+                      .
                     </p>
-                  </>
+                  </object>
+                ) : (
+                  <p className="p-6 text-center text-sm text-ink-soft">Loading…</p>
                 )}
               </IlluminatedCard>
             </div>

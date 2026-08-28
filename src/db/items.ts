@@ -23,6 +23,7 @@ export async function deleteItem(id: string): Promise<void> {
   await db.delete('items', id)
   if (item) {
     await db.delete('audio_blobs', item.audio.file)
+    await db.delete('pdf_blobs', item.pdf_file)
   }
 }
 

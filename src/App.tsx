@@ -5,8 +5,8 @@ import { DhikrPlayer } from './pages/DhikrPlayer'
 import { Settings } from './pages/Settings'
 import { useReminderScheduler } from './hooks/useReminderScheduler'
 
-// Code-split: regular users never load the admin bundle (pdf.js, tesseract.js)
-// over the network — it's only fetched when someone actually visits /admin.
+// Code-split: regular users never load the admin bundle over the network —
+// it's only fetched when someone actually visits /admin.
 const AdminSetsPage = lazy(() =>
   import('./admin/AdminSetsPage').then((m) => ({ default: m.AdminSetsPage })),
 )
