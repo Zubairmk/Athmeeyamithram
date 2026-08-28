@@ -21,8 +21,8 @@ export async function showReminderNotification(title: string, body: string): Pro
       const registration = await navigator.serviceWorker.ready
       await registration.showNotification(title, {
         body,
-        icon: '/pwa-192x192.png',
-        badge: '/pwa-192x192.png',
+        icon: `${import.meta.env.BASE_URL}pwa-192x192.png`,
+        badge: `${import.meta.env.BASE_URL}pwa-192x192.png`,
         tag: title,
       })
       return

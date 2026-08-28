@@ -37,8 +37,11 @@ export async function ocrCanvas(canvas: HTMLCanvasElement): Promise<OcrResult> {
 
   const recognizePromise = (async () => {
     const worker = await createWorker(['ara', 'mal'], undefined, {
-      workerPath: '/tesseract-core/worker.min.js',
-      corePath: '/tesseract-core',
+      // BASE_URL (not a hardcoded leading slash) so this resolves correctly
+      // when the app is deployed under a subpath, e.g. GitHub Pages project
+      // sites at https://<user>.github.io/<repo>/ rather than domain root.
+      workerPath: `${import.meta.env.BASE_URL}tesseract-core/worker.min.js`,
+      corePath: `${import.meta.env.BASE_URL}tesseract-core`,
       errorHandler: (error) => {
         rejectFromWorkerError?.(error instanceof Error ? error : new Error(String(error)))
       },
