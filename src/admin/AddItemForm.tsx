@@ -44,7 +44,10 @@ export function AddItemForm({ setId, nextOrder, existing, onSaved, onCancel }: A
     return () => URL.revokeObjectURL(url)
   }, [audioFile])
 
-  const canSave = (pdfFile || existing) && (audioFile || existing) && !saving
+  // Audio is optional at save time — picking both a PDF and an audio file in
+  // one go is real friction on a phone, so you can save with just the PDF
+  // and attach audio later by editing the item.
+  const canSave = (pdfFile || existing) && !saving
 
   async function handleSave() {
     if (!canSave) return
@@ -60,7 +63,7 @@ export function AddItemForm({ setId, nextOrder, existing, onSaved, onCancel }: A
 
       const audioFileKey = audioFile
         ? `${setId}-${id}.${extensionFor(audioFile, 'audio')}`
-        : existing!.audio.file
+        : (existing?.audio.file ?? '')
       if (audioFile) await putAudioBlob(audioFileKey, audioFile)
 
       const item: DhikrItem = {
@@ -95,7 +98,10 @@ export function AddItemForm({ setId, nextOrder, existing, onSaved, onCancel }: A
           />
         </label>
         <label className="text-sm">
-          Audio {existing && <span className="text-neutral-400">(optional — replaces existing)</span>}
+          Audio{' '}
+          <span className="text-neutral-400">
+            ({existing ? 'optional — replaces existing' : 'optional — can add later'})
+          </span>
           <input
             type="file"
             accept="audio/*"
