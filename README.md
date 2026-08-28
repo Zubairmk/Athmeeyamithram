@@ -34,9 +34,33 @@ npm run dev
       teal/gold palette. Mounted once per screen so the chosen speed carries
       across items, and playback continues onto the next item automatically
       if it was already playing when you navigate.
-- [ ] **Stage 5** — Streak tracking, PWA/offline, reminder notifications.
+- [x] **Stage 5** — Streak calendar/heatmap on Home (last 8 weeks, teal
+      intensity by both/one/none completed); PWA installability + offline via
+      `vite-plugin-pwa` (manifest, service worker precaching the app shell —
+      the admin bundle and vendored OCR engine are excluded from precache and
+      runtime-cached instead, so a regular user's install stays small);
+      configurable Morning/Evening reminders (`/settings`) using the Web
+      Notifications API.
+
+  Reminder notifications are necessarily best-effort: this is a fully local,
+  no-login PWA with no backend, and there's no way for a web app to wake a
+  fully-closed browser at an exact time without Web Push + a server. Reminders
+  are checked once on load and then every minute while the app stays open
+  (including in a background tab) — the standard approach for this kind of
+  app, and what the in-app copy on the Settings screen explains to the user.
 
 ## Data model
 
 See `src/types/dhikr.ts` for the full schema (`DhikrSet`, `DhikrItem`,
 `DailyProgress`, `AppSettings`). Data access lives in `src/db/`.
+
+## Building for production / testing the PWA
+
+`npm run dev` does not register the service worker (by design — this is the
+normal way vite-plugin-pwa works, so it never gets in the way of HMR). To
+test installability and offline behavior, use a production build:
+
+```bash
+npm run build
+npm run preview
+```

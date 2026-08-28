@@ -10,6 +10,9 @@ import { IslamicStar } from '../components/IslamicStar'
 import { GeometricDivider } from '../components/GeometricDivider'
 import { IlluminatedCard } from '../components/IlluminatedCard'
 import { SetIcon } from '../components/SetIcon'
+import { StreakHeatmap } from '../components/StreakHeatmap'
+import { GearIcon } from '../components/GearIcon'
+import type { DailyProgress } from '../types/dhikr'
 
 function greeting(): string {
   const hour = new Date().getHours()
@@ -28,6 +31,7 @@ export function Home() {
   const [morningDone, setMorningDone] = useState(false)
   const [eveningDone, setEveningDone] = useState(false)
   const [streak, setStreak] = useState(0)
+  const [progressRecords, setProgressRecords] = useState<DailyProgress[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -47,6 +51,7 @@ export function Home() {
       setMorningDone(!!todayProgress?.morning_completed)
       setEveningDone(!!todayProgress?.evening_completed)
       setStreak(computeCurrentStreak(allProgress))
+      setProgressRecords(allProgress)
       setLoading(false)
     }
     load()
@@ -68,9 +73,18 @@ export function Home() {
               ആത്മീയമിത്രം
             </h1>
           </div>
-          <div className="flex items-center gap-1 rounded-full border border-gold-400/40 px-2.5 py-1 text-gold-400">
-            <IslamicStar className="h-3.5 w-3.5" />
-            <span className="text-sm font-medium">{streak}</span>
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1 rounded-full border border-gold-400/40 px-2.5 py-1 text-gold-400">
+              <IslamicStar className="h-3.5 w-3.5" />
+              <span className="text-sm font-medium">{streak}</span>
+            </div>
+            <Link
+              to="/settings"
+              aria-label="Settings"
+              className="rounded-full p-1.5 text-gold-400/80 hover:text-gold-400"
+            >
+              <GearIcon className="h-4 w-4" />
+            </Link>
           </div>
         </div>
         <div className="mx-auto mt-4 max-w-md">
@@ -144,6 +158,16 @@ export function Home() {
                 </ul>
               </>
             )}
+
+            <div className="my-6">
+              <GeometricDivider className="text-gold-500/40" />
+            </div>
+            <p className="mb-3 text-xs font-medium tracking-wide text-ink-soft uppercase">
+              Recent activity
+            </p>
+            <IlluminatedCard className="p-4">
+              <StreakHeatmap records={progressRecords} />
+            </IlluminatedCard>
           </>
         )}
       </main>
