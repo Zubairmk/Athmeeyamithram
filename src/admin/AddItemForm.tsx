@@ -104,7 +104,11 @@ export function AddItemForm({ setId, nextOrder, existing, onSaved, onCancel }: A
           </span>
           <input
             type="file"
-            accept="audio/*"
+            // Broader than "audio/*" on purpose: files forwarded through
+            // WhatsApp etc. often don't carry a MIME type the OS recognizes
+            // as audio, which can make them unselectable under a strict
+            // audio/* filter even though they're perfectly playable.
+            accept="audio/*,.mp3,.m4a,.aac,.wav,.ogg,.opus,.wma,.flac"
             className="mt-1 block w-full text-sm"
             onChange={(e) => setAudioFile(e.target.files?.[0] ?? null)}
           />
