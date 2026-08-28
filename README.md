@@ -22,7 +22,13 @@ npm run dev
       engine itself needs no CDN (see `scripts/vendor-tesseract-core.mjs`).
       Extracted text is pre-filled into editable fields; low-confidence or
       heuristically-corrected extractions are flagged for review.
-- [ ] **Stage 3** — Core screens (home, dhikr player).
+- [x] **Stage 3** — Core screens: home (greeting, today's status, streak in
+      the header, Morning/Evening cards, occasion sets list) and the dhikr
+      player (one item per full-screen panel, Arabic/Malayalam display,
+      next/prev + swipe + keyboard navigation, manual "Mark complete" once
+      every item's been viewed). Islamic-geometric design system (deep teal +
+      ivory + muted gold, 8-point star motif, illuminated-manuscript card
+      framing, Noto Naskh Arabic / Noto Sans Malayalam / Noto Serif).
 - [ ] **Stage 4** — Audio player (play/pause, speed control).
 - [ ] **Stage 5** — Streak tracking, PWA/offline, reminder notifications.
 

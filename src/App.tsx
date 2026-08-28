@@ -1,6 +1,7 @@
 import { Suspense, lazy, useEffect } from 'react'
 import { Route, Routes } from 'react-router-dom'
-import { DebugHome } from './pages/DebugHome'
+import { Home } from './pages/Home'
+import { DhikrPlayer } from './pages/DhikrPlayer'
 import { seedDefaultSets } from './db/seed'
 
 // Code-split: regular users never load the admin bundle (pdf.js, tesseract.js)
@@ -20,7 +21,8 @@ function App() {
   return (
     <Suspense fallback={<div className="p-8 text-sm text-neutral-500">Loading…</div>}>
       <Routes>
-        <Route path="/" element={<DebugHome />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/sets/:setId" element={<DhikrPlayer />} />
         <Route path="/admin" element={<AdminSetsPage />} />
         <Route path="/admin/sets/:setId" element={<AdminItemsPage />} />
       </Routes>

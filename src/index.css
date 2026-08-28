@@ -1,4 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;500;600;700&family=Noto+Sans+Malayalam:wght@400;500;600;700&family=Noto+Serif:ital,wght@0,400;0,600;1,400&display=swap');
 @import 'tailwindcss';
+
+@theme {
+  /* Deep teal/emerald primary, ivory/cream ground, muted brass accent,
+     charcoal text — one palette for the whole app, no morning/evening
+     theming. */
+  --color-ink: #2c2a24;
+  --color-ink-soft: #5a564a;
+  --color-paper: #faf6ec;
+  --color-paper-raised: #f3ecdc;
+  --color-teal-950: #08211d;
+  --color-teal-900: #0d332c;
+  --color-teal-800: #124238;
+  --color-teal-700: #185448;
+  --color-teal-600: #1f695a;
+  --color-gold-400: #c9a25e;
+  --color-gold-500: #b08b46;
+  --color-gold-600: #93713a;
+
+  --font-arabic: 'Noto Naskh Arabic', 'Traditional Arabic', serif;
+  --font-malayalam: 'Noto Sans Malayalam', sans-serif;
+  --font-ui: 'Noto Serif', 'Georgia', serif;
+}
 
 :root {
   color-scheme: light;
@@ -6,4 +29,7 @@
 
 body {
   margin: 0;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-ui);
 }
